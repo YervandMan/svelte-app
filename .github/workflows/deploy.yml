@@ -1,0 +1,22 @@
+name: Master Workflow
+on:
+  push:
+    branches: [master]
+jobs:
+  deploy:
+    name: Deploying
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version-file: ".nvmrc"
+      - name: Install dependencies
+        run: npm ci
+      - name: Publish
+        run: npx wrangler publish
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
